@@ -30,10 +30,13 @@ public class GamePlayService {
         displayService.getPlayer().setLocation(displayService.getPlayerPoint().x * 100, displayService.getPlayerPoint().y * 100);
         if (displayService.getWindowPoint().x == displayService.getPlayerPoint().x && displayService.getWindowPoint().y == displayService.getPlayerPoint().y) {
             displayService.getBricks()[displayService.getWindowPoint().y][displayService.getWindowPoint().x] = null;
+            hideBricks();
+            counter=0;
         }
         displayService.getPlayerListener().setReleased(true);
-        if(counter%(60*3)==0){
+        if(counter%(60*1)==0){
             hideBricks();
+            counter=0;
         }
         counter++;
     }
