@@ -1,6 +1,7 @@
 package mikolaj.bogudal.pacman.business.listener;
 
 import lombok.Setter;
+import org.springframework.boot.SpringApplication;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,6 +49,8 @@ public class PlayerListener extends KeyAdapter {
                     point.y += 1;
                 }
                 break;
+            case  KeyEvent.VK_ESCAPE:
+                System.exit(0);
         }
     }
 }

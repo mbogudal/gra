@@ -59,7 +59,7 @@ public class DisplayService {
         for (int i = 0; i < 10; i++){
             for (int j = 0; j <10; j++){
                 if("0".equals(map[i][j])){
-                    bricks[i][j]=createImage("bricks",i*100, j*100);
+                    bricks[i][j]=createImage("bricks",j*100, i*100);
                     panel.add(bricks[i][j]);
                 }
             }
