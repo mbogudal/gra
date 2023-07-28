@@ -3,14 +3,12 @@ package mikolaj.bogudal.pacman.business.service;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.java.Log;
 import mikolaj.bogudal.pacman.business.listener.PlayerListener;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,13 +21,16 @@ public class DisplayService {
     private final JLabel background;
     private final JLabel player;
     private final Map<String, ImageIcon> images;
-    private JPanel panel;
+    private final String[][] map;
+    private final JPanel panel;
 
     public DisplayService() {
         this.frame = new JFrame("PacMan");
         images = new HashMap<>();
         background = createImage("background", 0, 0, 1000, 1000);
         player = createImage("player", 0, 0);
+        panel = createJPanel();
+        map = new String[10][10];
     }
 
     @PostConstruct
@@ -37,8 +38,7 @@ public class DisplayService {
         this.frame.setSize(1000, 1000);
         this.frame.setLayout(null);
         this.frame.setVisible(true);
-        panel = createJPanel();
-        frame.addKeyListener(new PlayerListener(player, 100));
+        frame.addKeyListener(new PlayerListener(player, 100, map));
         frame.setFocusable(true);
         panel.add(player);
         panel.add(background);
@@ -48,6 +48,14 @@ public class DisplayService {
         frame.repaint();
         frame.revalidate();
 
+    }
+
+    private void initMap(){
+        for (int i = 0; i < 10; i++){
+            for (int j = 0; j < 10; j++){
+                map[i][j]="0";
+            }
+        }
     }
 
     private JPanel createJPanel() {
