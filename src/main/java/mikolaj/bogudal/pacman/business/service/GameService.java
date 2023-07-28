@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
+@Async
 @Log
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class GameService {
         log.info("game started");
     }
 
-    @Async
+
     @Scheduled(fixedRate = 16)
     void perFrame() {
         displayService.getPlayer().setLocation(displayService.getPlayerPoint().x * 100, displayService.getPlayerPoint().y * 100);
@@ -32,7 +33,6 @@ public class GameService {
         displayService.getPlayerListener().setReleased(true);
     }
 
-    @Async
     @Scheduled(fixedRate = 1000)
     void hideBricks() {
         if (displayService.getBricks()[displayService.getWindowPoint().y][displayService.getWindowPoint().x] != null)
