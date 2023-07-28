@@ -1,6 +1,7 @@
 package mikolaj.bogudal.pacman.business.service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.extern.java.Log;
 import mikolaj.bogudal.pacman.business.listener.PlayerListener;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,19 @@ public class DisplayService {
 
     private final JFrame frame;
     private final JLabel background;
+    @Getter
     private final JLabel player;
     private final Map<String, ImageIcon> images;
     private final String[][] map;
+    @Getter
+    private final JLabel[][] bricks;
     private final JPanel panel;
+    @Getter
+    private final Point windowPoint;
+    @Getter
+    private final Point playerPoint;
+    @Getter
+    private final PlayerListener playerListener;
 
     public DisplayService() {
         this.frame = new JFrame("PacMan");
@@ -31,16 +41,29 @@ public class DisplayService {
         player = createImage("player", 0, 0);
         panel = createJPanel();
         map = new String[10][10];
+        bricks = new JLabel[10][10];
+        windowPoint=new Point(5,5);
+        playerPoint=new Point(0,0);
+        playerListener = new PlayerListener(playerPoint, 100, map);
     }
 
     @PostConstruct
     void init() {
+        initMap();
         this.frame.setSize(1000, 1000);
         this.frame.setLayout(null);
         this.frame.setVisible(true);
-        frame.addKeyListener(new PlayerListener(player, 100, map));
+        frame.addKeyListener(playerListener);
         frame.setFocusable(true);
         panel.add(player);
+        for (int i = 0; i < 10; i++){
+            for (int j = 0; j <10; j++){
+                if("0".equals(map[i][j])){
+                    bricks[i][j]=createImage("bricks",i*100, j*100);
+                    panel.add(bricks[i][j]);
+                }
+            }
+        }
         panel.add(background);
         panel.repaint();
         panel.revalidate();
