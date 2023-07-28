@@ -13,7 +13,7 @@ import java.util.Random;
 @Log
 @Service
 @RequiredArgsConstructor
-public class GameService {
+public class GamePlayService {
 
     private final DisplayService displayService;
     private Random random = new Random();
