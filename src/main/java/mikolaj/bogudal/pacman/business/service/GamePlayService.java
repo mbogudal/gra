@@ -32,7 +32,7 @@ public class GamePlayService {
             displayService.getBricks()[displayService.getWindowPoint().y][displayService.getWindowPoint().x] = null;
         }
         displayService.getPlayerListener().setReleased(true);
-        if(counter%60*3==0){
+        if(counter%(60*3)==0){
             hideBricks();
         }
         counter++;
