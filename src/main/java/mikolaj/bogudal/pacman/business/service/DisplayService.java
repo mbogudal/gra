@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Log
 @Service
@@ -18,11 +20,13 @@ public class DisplayService {
 
     private final JFrame frame;
     private final JLabel background;
+    private final Map<String, ImageIcon> images;
     private JPanel panel;
     private JPanel bufferedPanel;
 
     public DisplayService() {
         this.frame = new JFrame("PacMan");
+        images = new HashMap<>();
         background=createImage("background", 0,0,1000, 1000);
     }
 
@@ -68,12 +72,19 @@ public class DisplayService {
     private JLabel createImage(String name, int x, int y, int w, int h) {
         JLabel out = null;
         try {
+            ImageIcon image = null;
+            if(images.containsKey(name)){
+                image=images.get(name);
+            } else {
+                image = new ImageIcon(
+                        ImageIO.read(
+                                        ResourceUtils.getFile("classpath:assets/" + name + ".png"))
+                                .getScaledInstance(w, h, Image.SCALE_SMOOTH)
+                );
+                images.put(name, image);
+            }
             out = new JLabel(
-                    new ImageIcon(
-                            ImageIO.read(
-                                    ResourceUtils.getFile("classpath:assets/" + name+".png"))
-                                    .getScaledInstance(w,h, Image.SCALE_SMOOTH)
-                    )
+                    image
             );
             out.setBounds(x,y,w,h);
         } catch (IOException e) {
