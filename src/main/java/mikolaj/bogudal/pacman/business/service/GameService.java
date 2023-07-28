@@ -17,6 +17,7 @@ public class GameService {
 
     private final DisplayService displayService;
     private Random random = new Random();
+    private long counter;
 
     @PostConstruct
     void init() {
@@ -31,9 +32,12 @@ public class GameService {
             displayService.getBricks()[displayService.getWindowPoint().y][displayService.getWindowPoint().x] = null;
         }
         displayService.getPlayerListener().setReleased(true);
+        if(counter%60*3==0){
+            hideBricks();
+        }
+        counter++;
     }
 
-    @Scheduled(fixedRate = 1000)
     void hideBricks() {
         if (displayService.getBricks()[displayService.getWindowPoint().y][displayService.getWindowPoint().x] != null)
             displayService.getBricks()[displayService.getWindowPoint().y][displayService.getWindowPoint().x].setVisible(true);
