@@ -24,15 +24,12 @@ public class DisplayService {
     private final JLabel player;
     private final Map<String, ImageIcon> images;
     private JPanel panel;
-    private JPanel bufferedPanel;
 
     public DisplayService() {
         this.frame = new JFrame("PacMan");
         images = new HashMap<>();
         background = createImage("background", 0, 0, 1000, 1000);
         player = createImage("player", 0, 0);
-        frame.addKeyListener(new PlayerListener(player, 100));
-        frame.setFocusable(true);
     }
 
     @PostConstruct
@@ -41,20 +38,12 @@ public class DisplayService {
         this.frame.setLayout(null);
         this.frame.setVisible(true);
         panel = createJPanel();
-    }
-
-    @Scheduled(fixedDelay = 16)
-    void display() {
-        log.info("loop");
-
-        bufferedPanel = createJPanel();
-        bufferedPanel.add(player);
-        bufferedPanel.add(background);
-        bufferedPanel.repaint();
-        bufferedPanel.revalidate();
-
-        frame.remove(panel);
-        panel = bufferedPanel;
+        frame.addKeyListener(new PlayerListener(player, 100));
+        frame.setFocusable(true);
+        panel.add(player);
+        panel.add(background);
+        panel.repaint();
+        panel.revalidate();
         frame.add(panel);
         frame.repaint();
         frame.revalidate();
