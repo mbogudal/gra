@@ -30,8 +30,6 @@ public class DisplayService {
     private final JLabel[][] bricks;
     private final JPanel panel;
     @Getter
-    private final Point windowPoint;
-    @Getter
     private final Point playerPoint;
     @Getter
     private final PlayerListener playerListener;
@@ -44,7 +42,6 @@ public class DisplayService {
         panel = createJPanel();
         map = new String[10][10];
         bricks = new JLabel[10][10];
-        windowPoint=new Point(5,5);
         playerPoint=new Point(0,0);
         playerListener = new PlayerListener(playerPoint, 100, map);
         endScreen =createImage("endScreen", 0, 0, 1000, 1000);
