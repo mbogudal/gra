@@ -86,6 +86,8 @@ public class GamePlayService {
 
     void onGameOver(){
         displayService.getEndScreen().setVisible(true);
+        displayService.getBtnExcellent().setVisible(true);
+        displayService.getBtnMeh().setVisible(true);
         while(true);
     }
 

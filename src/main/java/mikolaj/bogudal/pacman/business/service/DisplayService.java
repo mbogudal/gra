@@ -33,6 +33,10 @@ public class DisplayService {
     private final Point playerPoint;
     @Getter
     private final PlayerListener playerListener;
+    @Getter
+    private final JButton btnExcellent;
+    @Getter
+    private final JButton btnMeh;
 
     public DisplayService() {
         this.frame = new JFrame("PacMan");
@@ -45,6 +49,8 @@ public class DisplayService {
         playerPoint=new Point(0,0);
         playerListener = new PlayerListener(playerPoint, 100, map);
         endScreen =createImage("endScreen", 0, 0, 1000, 1000);
+        btnExcellent = new JButton("Excellent");
+        btnMeh = new JButton("Meh");
     }
 
     @PostConstruct
@@ -55,6 +61,14 @@ public class DisplayService {
         this.frame.setVisible(true);
         frame.addKeyListener(playerListener);
         frame.setFocusable(true);
+        panel.add(btnExcellent);
+        btnExcellent.setVisible(false);
+        btnExcellent.setSize(100,100);
+        btnExcellent.setLocation(0,0);
+        panel.add(btnMeh);
+        btnMeh.setVisible(false);
+        btnMeh.setSize(100,100);
+        btnMeh.setLocation(100,0);
         panel.add(endScreen);
         endScreen.setVisible(false);
         panel.add(player);
