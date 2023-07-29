@@ -21,6 +21,8 @@ public class DisplayService {
     private final JFrame frame;
     private final JLabel background;
     @Getter
+    private final JLabel endScreen;
+    @Getter
     private final JLabel player;
     private final Map<String, ImageIcon> images;
     private final String[][] map;
@@ -45,6 +47,7 @@ public class DisplayService {
         windowPoint=new Point(5,5);
         playerPoint=new Point(0,0);
         playerListener = new PlayerListener(playerPoint, 100, map);
+        endScreen =createImage("endScreen", 0, 0, 1000, 1000);
     }
 
     @PostConstruct
@@ -55,6 +58,8 @@ public class DisplayService {
         this.frame.setVisible(true);
         frame.addKeyListener(playerListener);
         frame.setFocusable(true);
+        panel.add(endScreen);
+        endScreen.setVisible(false);
         panel.add(player);
         for (int i = 0; i < 10; i++){
             for (int j = 0; j <10; j++){

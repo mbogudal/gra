@@ -17,7 +17,8 @@ public class GamePlayService {
 
     private final DisplayService displayService;
     private Random random = new Random();
-    private long counter;
+    private long counterBricks=1;
+    private long counterEndGame=1;
 
     @PostConstruct
     void init() {
@@ -31,14 +32,18 @@ public class GamePlayService {
         if (displayService.getWindowPoint().x == displayService.getPlayerPoint().x && displayService.getWindowPoint().y == displayService.getPlayerPoint().y) {
             displayService.getBricks()[displayService.getWindowPoint().y][displayService.getWindowPoint().x] = null;
             hideBricks();
-            counter=0;
+            counterBricks =0;
         }
         displayService.getPlayerListener().setReleased(true);
-        if(counter%(60*1)==0){
+        if(counterBricks %(60*1)==0){
             hideBricks();
-            counter=0;
+            counterBricks =0;
         }
-        counter++;
+        if(counterEndGame%(60*60*3)==0){
+            displayService.getEndScreen().setVisible(true);
+        }
+        counterBricks++;
+        counterEndGame++;
     }
 
     void hideBricks() {
