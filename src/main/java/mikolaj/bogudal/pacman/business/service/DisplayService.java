@@ -86,6 +86,7 @@ public class DisplayService {
         frame.add(panel);
         frame.repaint();
         frame.revalidate();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
 

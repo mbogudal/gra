@@ -49,8 +49,6 @@ public class PlayerListener extends KeyAdapter {
                     point.y += 1;
                 }
                 break;
-            case  KeyEvent.VK_ESCAPE:
-                System.exit(0);
         }
     }
 }
