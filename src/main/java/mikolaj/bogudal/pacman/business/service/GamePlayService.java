@@ -52,20 +52,30 @@ public class GamePlayService {
             onGameOver();
 
         }
-        displayService.getPlayer().setLocation(displayService.getPlayerPoint().x * 100, displayService.getPlayerPoint().y * 100);
+
         if (brick != null) {
             if (windowPoint.x == displayService.getPlayerPoint().x && windowPoint.y == displayService.getPlayerPoint().y) {
                 onPickup();
             }
         }
-        displayService.getPlayerListener().setReleased(true);
+
         if (counterBricks % (60 * 2) == 0) {
             onHideBricks();
             counterBricks = 1;
         }
 
+        movePlayer();
+        incrementCounters();
+    }
+
+    void incrementCounters(){
         counterBricks++;
         counterEndGame++;
+    }
+
+    void movePlayer(){
+        displayService.getPlayer().setLocation(displayService.getPlayerPoint().x * 100, displayService.getPlayerPoint().y * 100);
+        displayService.getPlayerListener().setReleased(true);
     }
 
     void onPickup(){
