@@ -1,7 +1,6 @@
 package mikolaj.bogudal.pacman.business.service;
 
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -50,20 +49,18 @@ public class GamePlayService {
             }
         }
         if(bricks.isEmpty() || counterEndGame % (60 * 60 * 3) == 0){
-            gameOver();
+            onGameOver();
 
         }
         displayService.getPlayer().setLocation(displayService.getPlayerPoint().x * 100, displayService.getPlayerPoint().y * 100);
         if (brick != null) {
             if (windowPoint.x == displayService.getPlayerPoint().x && windowPoint.y == displayService.getPlayerPoint().y) {
-                displayService.getBricks()[windowPoint.y][windowPoint.x] = null;
-                counterBricks = 0;
-                brick=null;
+                onPickup();
             }
         }
         displayService.getPlayerListener().setReleased(true);
         if (counterBricks % (60 * 2) == 0) {
-            hideBricks();
+            onHideBricks();
             counterBricks = 1;
         }
 
@@ -71,17 +68,18 @@ public class GamePlayService {
         counterEndGame++;
     }
 
-    void gameOver(){
-        displayService.getEndScreen().setVisible(true);
-        try {
-            wait(1000*10);
-            System.exit(0);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    void onPickup(){
+        displayService.getBricks()[windowPoint.y][windowPoint.x] = null;
+        counterBricks = 0;
+        brick=null;
     }
 
-    void hideBricks() {
+    void onGameOver(){
+        displayService.getEndScreen().setVisible(true);
+        while(true);
+    }
+
+    void onHideBricks() {
         if (brick != null)
             brick.setVisible(true);
         brick = bricks.get(random.nextInt(bricks.size()));
