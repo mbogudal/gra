@@ -54,7 +54,7 @@ public class GamePlayService {
                 .build();
 
         var playerPoint = new Point();
-        playerDto= PlayerDto
+        playerDto = PlayerDto
                 .builder()
                 .playerListener(new PlayerListener(playerPoint, levelDto.getMap()))
                 .player(imageService.createImage("player", 0, 0))
@@ -65,6 +65,7 @@ public class GamePlayService {
     @PostConstruct
     void init() {
         log.info("game started");
+        initMap();
     }
 
 
@@ -137,6 +138,14 @@ public class GamePlayService {
         windowPoint.y = brick.getY() / 100;
         if (brick != null)
             brick.setVisible(false);
+    }
+
+    private void initMap() {
+        for (int i = 0; i < levelDto.getRows(); i++) {
+            for (int j = 0; j < levelDto.getCols(); j++) {
+                levelDto.getMap()[i][j] = "0";
+            }
+        }
     }
 
 }

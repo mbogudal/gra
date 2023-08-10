@@ -29,7 +29,6 @@ public class DisplayService {
 
     @PostConstruct
     void init() {
-        initMap();
         this.frame.setLayout(null);
         this.frame.setVisible(true);
         frame.addKeyListener(gamePlayService.getPlayerDto().getPlayerListener());
@@ -54,14 +53,6 @@ public class DisplayService {
         frame.revalidate();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    }
-
-    private void initMap() {
-        for (int i = 0; i < gamePlayService.getLevelDto().getRows(); i++) {
-            for (int j = 0; j < gamePlayService.getLevelDto().getCols(); j++) {
-                gamePlayService.getLevelDto().getMap()[i][j] = "0";
-            }
-        }
     }
 
     private JPanel createJPanel() {
