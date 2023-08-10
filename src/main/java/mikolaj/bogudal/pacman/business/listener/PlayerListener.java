@@ -26,8 +26,7 @@ public class PlayerListener extends KeyAdapter {
         int key = e.getKeyCode();
         if(!released)
             return;
-        System.out.println("point x"+point.x);
-        System.out.println("len"+map[0].length);
+
         switch (key) {
             case KeyEvent.VK_D:
                 if (map[0].length > point.x+1) {
