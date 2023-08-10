@@ -10,15 +10,13 @@ import java.awt.event.KeyEvent;
 
 public class PlayerListener extends KeyAdapter {
     private final Point point;
-    private final int speed;
     private final String[][] map;
     @Setter
     private boolean released;
 
 
-    public PlayerListener(Point point, int speed, String[][] map) {
+    public PlayerListener(Point point, String[][] map) {
         this.point = point;
-        this.speed = speed;
         this.map = map;
         released=true;
     }
@@ -28,9 +26,11 @@ public class PlayerListener extends KeyAdapter {
         int key = e.getKeyCode();
         if(!released)
             return;
+        System.out.println("point x"+point.x);
+        System.out.println("len"+map[0].length);
         switch (key) {
             case KeyEvent.VK_D:
-                if (map[0].length > point.x + 1) {
+                if (map[0].length > point.x+1) {
                     point.x += 1;
                 }
                 break;
@@ -45,7 +45,7 @@ public class PlayerListener extends KeyAdapter {
                 }
                 break;
             case KeyEvent.VK_S:
-                if (map.length > point.y + 1) {
+                if (map.length > point.y +1) {
                     point.y += 1;
                 }
                 break;

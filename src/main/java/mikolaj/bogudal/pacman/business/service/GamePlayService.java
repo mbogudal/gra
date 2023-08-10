@@ -39,23 +39,21 @@ public class GamePlayService {
 
     @Scheduled(fixedRate = 16)
     void perFrame() {
+        movePlayer();
+        detectCollisions();
+        environmentBehavior();
+        validateRules();
+        incrementCounters();
+    }
+
+    void environmentBehavior(){
         bricks.clear();
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < displayService.getRows(); i++) {
+            for (int j = 0; j < displayService.getCols(); j++) {
                 var brick = displayService.getBricks()[i][j];
                 if (brick != null) {
                     bricks.add(brick);
                 }
-            }
-        }
-        if(bricks.isEmpty() || counterEndGame % (60 * 60 * 3) == 0){
-            onGameOver();
-
-        }
-
-        if (brick != null) {
-            if (windowPoint.x == displayService.getPlayerPoint().x && windowPoint.y == displayService.getPlayerPoint().y) {
-                onPickup();
             }
         }
 
@@ -63,9 +61,19 @@ public class GamePlayService {
             onHideBricks();
             counterBricks = 1;
         }
+    }
 
-        movePlayer();
-        incrementCounters();
+    void validateRules(){
+        if(bricks.isEmpty() || counterEndGame % (60 * 60 * 3) == 0){
+            onGameOver();
+        }
+    }
+    void detectCollisions(){
+        if (brick != null) {
+            if (windowPoint.x == displayService.getPlayerPoint().x && windowPoint.y == displayService.getPlayerPoint().y) {
+                onPickup();
+            }
+        }
     }
 
     void incrementCounters(){

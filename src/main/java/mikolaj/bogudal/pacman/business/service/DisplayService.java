@@ -37,18 +37,26 @@ public class DisplayService {
     private final JButton btnExcellent;
     @Getter
     private final JButton btnMeh;
+    @Getter
+    private final int screenW, screenH;
+    @Getter
+    private final int rows, cols;
 
     public DisplayService() {
         this.frame = new JFrame("PacMan");
+        screenW=500;
+        screenH=500;
+        rows=5;
+        cols=5;
         images = new HashMap<>();
-        background = createImage("background", 0, 0, 1000, 1000);
+        background = createImage("background", 0, 0, screenW, screenH);
         player = createImage("player", 0, 0);
         panel = createJPanel();
-        map = new String[10][10];
-        bricks = new JLabel[10][10];
+        map = new String[rows][cols];
+        bricks = new JLabel[rows][cols];
         playerPoint=new Point(0,0);
-        playerListener = new PlayerListener(playerPoint, 100, map);
-        endScreen =createImage("endScreen", 0, 0, 1000, 1000);
+        playerListener = new PlayerListener(playerPoint, map);
+        endScreen =createImage("endScreen", 0, 0, screenW, screenH);
         btnExcellent = new JButton("Excellent");
         btnMeh = new JButton("Meh");
     }
@@ -56,11 +64,11 @@ public class DisplayService {
     @PostConstruct
     void init() {
         initMap();
-        this.frame.setSize(1000, 1000);
         this.frame.setLayout(null);
         this.frame.setVisible(true);
         frame.addKeyListener(playerListener);
         frame.setFocusable(true);
+        frame.setSize(screenW, screenH);
         panel.add(btnExcellent);
         btnExcellent.setVisible(false);
         btnExcellent.setSize(100,100);
@@ -72,8 +80,8 @@ public class DisplayService {
         panel.add(endScreen);
         endScreen.setVisible(false);
         panel.add(player);
-        for (int i = 0; i < 10; i++){
-            for (int j = 0; j <10; j++){
+        for (int i = 0; i < rows; i++){
+            for (int j = 0; j <cols; j++){
                 if("0".equals(map[i][j])){
                     bricks[i][j]=createImage("bricks",j*100, i*100);
                     panel.add(bricks[i][j]);
@@ -91,8 +99,8 @@ public class DisplayService {
     }
 
     private void initMap(){
-        for (int i = 0; i < 10; i++){
-            for (int j = 0; j < 10; j++){
+        for (int i = 0; i < rows; i++){
+            for (int j = 0; j < cols; j++){
                 map[i][j]="0";
             }
         }
@@ -102,7 +110,7 @@ public class DisplayService {
         var out = new JPanel();
         out.setLayout(null);
         out.setVisible(true);
-        out.setBounds(0, 0, 1000, 1000);
+        out.setBounds(0, 0, screenW, screenH);
         out.setBackground(new Color(0, 0, 0));
         return out;
     }
