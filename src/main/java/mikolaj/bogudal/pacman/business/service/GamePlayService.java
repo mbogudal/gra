@@ -1,7 +1,11 @@
 package mikolaj.bogudal.pacman.business.service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.extern.java.Log;
+import mikolaj.bogudal.pacman.business.dto.LevelDto;
+import mikolaj.bogudal.pacman.business.dto.PlayerDto;
+import mikolaj.bogudal.pacman.business.listener.PlayerListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -9,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -16,19 +21,45 @@ import java.util.Random;
 @Log
 @Service
 public class GamePlayService {
-
-    private final DisplayService displayService;
     private Random random = new Random();
     private long counterBricks = 1;
     private long counterEndGame = 1;
     private final List<JLabel> bricks;
     private JLabel brick;
     private final Point windowPoint;
+    @Getter
+    private final LevelDto levelDto;
+    @Getter
+    private final PlayerDto playerDto;
+    private final ImageService imageService;
+    private final SystemService systemService;
 
-    public GamePlayService(DisplayService displayService) {
-        this.displayService = displayService;
+    public GamePlayService(ImageService imageService, SystemService systemService) {
+        this.imageService = imageService;
+        this.systemService = systemService;
         this.bricks = new ArrayList<>();
         windowPoint = new Point();
+        var rows = 5;
+        var cols = 5;
+        levelDto = LevelDto
+                .builder()
+                .cols(cols)
+                .rows(rows)
+                .map(new String[rows][cols])
+                .images(new HashMap<>())
+                .assets(new HashMap<>())
+                .endScreen(imageService.createImage("endScreen", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
+                .bricks(new JLabel[rows][cols])
+                .background(imageService.createImage("background", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
+                .build();
+
+        var playerPoint = new Point();
+        playerDto= PlayerDto
+                .builder()
+                .playerListener(new PlayerListener(playerPoint, levelDto.getMap()))
+                .player(imageService.createImage("player", 0, 0))
+                .playerPoint(playerPoint)
+                .build();
     }
 
     @PostConstruct
@@ -48,9 +79,9 @@ public class GamePlayService {
 
     void environmentBehavior() {
         bricks.clear();
-        for (int i = 0; i < displayService.getLevelDto().getRows(); i++) {
-            for (int j = 0; j < displayService.getLevelDto().getCols(); j++) {
-                var brick = displayService.getBricks()[i][j];
+        for (int i = 0; i < levelDto.getRows(); i++) {
+            for (int j = 0; j < levelDto.getCols(); j++) {
+                var brick = levelDto.getBricks()[i][j];
                 if (brick != null) {
                     bricks.add(brick);
                 }
@@ -71,7 +102,7 @@ public class GamePlayService {
 
     void detectCollisions() {
         if (brick != null) {
-            if (windowPoint.x == displayService.getPlayerPoint().x && windowPoint.y == displayService.getPlayerPoint().y) {
+            if (windowPoint.x == playerDto.getPlayerPoint().x && windowPoint.y == playerDto.getPlayerPoint().y) {
                 onPickup();
             }
         }
@@ -83,20 +114,18 @@ public class GamePlayService {
     }
 
     void movePlayer() {
-        displayService.getPlayer().setLocation(displayService.getPlayerPoint().x * 100, displayService.getPlayerPoint().y * 100);
-        displayService.getPlayerListener().setReleased(true);
+        playerDto.getPlayer().setLocation(playerDto.getPlayerPoint().x * 100, playerDto.getPlayerPoint().y * 100);
+        playerDto.getPlayerListener().setReleased(true);
     }
 
     void onPickup() {
-        displayService.getBricks()[windowPoint.y][windowPoint.x] = null;
+        levelDto.getBricks()[windowPoint.y][windowPoint.x] = null;
         counterBricks = 0;
         brick = null;
     }
 
     void onGameOver() {
-        displayService.getEndScreen().setVisible(true);
-        displayService.getBtnExcellent().setVisible(true);
-        displayService.getBtnMeh().setVisible(true);
+        levelDto.getEndScreen().setVisible(true);
         while (true) ;
     }
 
