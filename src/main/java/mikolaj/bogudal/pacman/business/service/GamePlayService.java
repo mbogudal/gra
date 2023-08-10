@@ -46,10 +46,10 @@ public class GamePlayService {
         incrementCounters();
     }
 
-    void environmentBehavior(){
+    void environmentBehavior() {
         bricks.clear();
-        for (int i = 0; i < displayService.getRows(); i++) {
-            for (int j = 0; j < displayService.getCols(); j++) {
+        for (int i = 0; i < displayService.getLevelDto().getRows(); i++) {
+            for (int j = 0; j < displayService.getLevelDto().getCols(); j++) {
                 var brick = displayService.getBricks()[i][j];
                 if (brick != null) {
                     bricks.add(brick);
@@ -63,12 +63,13 @@ public class GamePlayService {
         }
     }
 
-    void validateRules(){
-        if(bricks.isEmpty() || counterEndGame % (60 * 60 * 3) == 0){
+    void validateRules() {
+        if (bricks.isEmpty() || counterEndGame % (60 * 60 * 3) == 0) {
             onGameOver();
         }
     }
-    void detectCollisions(){
+
+    void detectCollisions() {
         if (brick != null) {
             if (windowPoint.x == displayService.getPlayerPoint().x && windowPoint.y == displayService.getPlayerPoint().y) {
                 onPickup();
@@ -76,35 +77,35 @@ public class GamePlayService {
         }
     }
 
-    void incrementCounters(){
+    void incrementCounters() {
         counterBricks++;
         counterEndGame++;
     }
 
-    void movePlayer(){
+    void movePlayer() {
         displayService.getPlayer().setLocation(displayService.getPlayerPoint().x * 100, displayService.getPlayerPoint().y * 100);
         displayService.getPlayerListener().setReleased(true);
     }
 
-    void onPickup(){
+    void onPickup() {
         displayService.getBricks()[windowPoint.y][windowPoint.x] = null;
         counterBricks = 0;
-        brick=null;
+        brick = null;
     }
 
-    void onGameOver(){
+    void onGameOver() {
         displayService.getEndScreen().setVisible(true);
         displayService.getBtnExcellent().setVisible(true);
         displayService.getBtnMeh().setVisible(true);
-        while(true);
+        while (true) ;
     }
 
     void onHideBricks() {
         if (brick != null)
             brick.setVisible(true);
         brick = bricks.get(random.nextInt(bricks.size()));
-        windowPoint.x=brick.getX()/100;
-        windowPoint.y=brick.getY()/100;
+        windowPoint.x = brick.getX() / 100;
+        windowPoint.y = brick.getY() / 100;
         if (brick != null)
             brick.setVisible(false);
     }

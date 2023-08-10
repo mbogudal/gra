@@ -3,6 +3,7 @@ package mikolaj.bogudal.pacman.business.service;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.extern.java.Log;
+import mikolaj.bogudal.pacman.business.dto.LevelDto;
 import mikolaj.bogudal.pacman.business.listener.PlayerListener;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -25,7 +26,6 @@ public class DisplayService {
     @Getter
     private final JLabel player;
     private final Map<String, ImageIcon> images;
-    private final String[][] map;
     @Getter
     private final JLabel[][] bricks;
     private final JPanel panel;
@@ -40,25 +40,32 @@ public class DisplayService {
     @Getter
     private final int screenW, screenH;
     @Getter
-    private final int rows, cols;
+    private final LevelDto levelDto;
 
     public DisplayService() {
-        this.frame = new JFrame("PacMan");
-        screenW=500;
-        screenH=500;
-        rows=5;
-        cols=5;
+        this.frame = new JFrame("OneCaucas");
+        screenW = 500;
+        screenH = 500;
+
         images = new HashMap<>();
         background = createImage("background", 0, 0, screenW, screenH);
         player = createImage("player", 0, 0);
         panel = createJPanel();
-        map = new String[rows][cols];
-        bricks = new JLabel[rows][cols];
-        playerPoint=new Point(0,0);
-        playerListener = new PlayerListener(playerPoint, map);
-        endScreen =createImage("endScreen", 0, 0, screenW, screenH);
+
+        levelDto = LevelDto
+                .builder()
+                .cols(5)
+                .rows(5)
+                .map(new String[5][5])
+                .images(new HashMap<>())
+                .build();
+        bricks = new JLabel[levelDto.getRows()][levelDto.getCols()];
+        playerPoint = new Point(0, 0);
+        playerListener = new PlayerListener(playerPoint, levelDto.getMap());
+        endScreen = createImage("endScreen", 0, 0, screenW, screenH);
         btnExcellent = new JButton("Excellent");
         btnMeh = new JButton("Meh");
+
     }
 
     @PostConstruct
@@ -71,19 +78,19 @@ public class DisplayService {
         frame.setSize(screenW, screenH);
         panel.add(btnExcellent);
         btnExcellent.setVisible(false);
-        btnExcellent.setSize(100,100);
-        btnExcellent.setLocation(0,0);
+        btnExcellent.setSize(100, 100);
+        btnExcellent.setLocation(0, 0);
         panel.add(btnMeh);
         btnMeh.setVisible(false);
-        btnMeh.setSize(100,100);
-        btnMeh.setLocation(100,0);
+        btnMeh.setSize(100, 100);
+        btnMeh.setLocation(100, 0);
         panel.add(endScreen);
         endScreen.setVisible(false);
         panel.add(player);
-        for (int i = 0; i < rows; i++){
-            for (int j = 0; j <cols; j++){
-                if("0".equals(map[i][j])){
-                    bricks[i][j]=createImage("bricks",j*100, i*100);
+        for (int i = 0; i < levelDto.getRows(); i++) {
+            for (int j = 0; j < levelDto.getCols(); j++) {
+                if ("0".equals(levelDto.getMap()[i][j])) {
+                    bricks[i][j] = createImage("bricks", j * 100, i * 100);
                     panel.add(bricks[i][j]);
                 }
             }
@@ -98,10 +105,10 @@ public class DisplayService {
 
     }
 
-    private void initMap(){
-        for (int i = 0; i < rows; i++){
-            for (int j = 0; j < cols; j++){
-                map[i][j]="0";
+    private void initMap() {
+        for (int i = 0; i < levelDto.getRows(); i++) {
+            for (int j = 0; j < levelDto.getCols(); j++) {
+                levelDto.getMap()[i][j] = "0";
             }
         }
     }
