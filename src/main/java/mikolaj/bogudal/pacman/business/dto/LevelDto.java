@@ -13,7 +13,6 @@ public class LevelDto {
     int cols=5;
     String[][] map;
     Map<String, ImageIcon> images;
-    Map<String,String> assets;
     JLabel endScreen;
     JLabel[][] bricks;
     JLabel background;

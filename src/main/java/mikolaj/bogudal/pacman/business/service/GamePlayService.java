@@ -47,7 +47,6 @@ public class GamePlayService {
                 .rows(rows)
                 .map(new String[rows][cols])
                 .images(new HashMap<>())
-                .assets(new HashMap<>())
                 .endScreen(imageService.createImage("endScreen", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
                 .bricks(new JLabel[rows][cols])
                 .background(imageService.createImage("background", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
