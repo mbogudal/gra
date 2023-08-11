@@ -130,6 +130,8 @@ public class GamePlayService {
     }
 
     void onHideBricks() {
+        if(bricks.size()==0)
+            return;
         if (brick != null)
             brick.setVisible(true);
         brick = bricks.get(random.nextInt(bricks.size()));
