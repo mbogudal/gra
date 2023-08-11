@@ -64,9 +64,9 @@ public class GamePlayService {
                 .rows(rows)
                 .map(new String[rows][cols])
                 .images(new HashMap<>())
-                .endScreen(imageService.createImage(levelJsonDtos.get(0).getAssetsLocation()+"endScreen", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
+                .endScreen(imageService.createImage(levelJsonDtos.get(0).getAssetsLocation()+"/endScreen", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
                 .bricks(new JLabel[rows][cols])
-                .background(imageService.createImage(levelJsonDtos.get(0).getAssetsLocation()+"background", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
+                .background(imageService.createImage(levelJsonDtos.get(0).getAssetsLocation()+"/background", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
                 .assetsLocation(levelJsonDtos.get(0).getAssetsLocation())
                 .build();
 
@@ -74,7 +74,7 @@ public class GamePlayService {
         playerDto = PlayerDto
                 .builder()
                 .playerListener(new PlayerListener(playerPoint, levelDto.getMap()))
-                .player(imageService.createImage(levelJsonDtos.get(0).getAssetsLocation()+"player", 0, 0))
+                .player(imageService.createImage(levelJsonDtos.get(0).getAssetsLocation()+"/player", 0, 0))
                 .playerPoint(playerPoint)
                 .build();
     }
