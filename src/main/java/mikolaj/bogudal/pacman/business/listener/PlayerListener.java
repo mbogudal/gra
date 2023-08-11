@@ -1,5 +1,6 @@
 package mikolaj.bogudal.pacman.business.listener;
 
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.SpringApplication;
 
@@ -13,6 +14,9 @@ public class PlayerListener extends KeyAdapter {
     private final String[][] map;
     @Setter
     private boolean released;
+    @Getter
+    @Setter
+    private boolean gameOver;
 
 
     public PlayerListener(Point point, String[][] map) {
@@ -47,6 +51,9 @@ public class PlayerListener extends KeyAdapter {
                 if (map.length > point.y +1) {
                     point.y += 1;
                 }
+                break;
+            case KeyEvent.VK_SPACE:
+                gameOver=false;
                 break;
         }
     }
