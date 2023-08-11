@@ -40,7 +40,7 @@ public class DisplayService {
         for (int i = 0; i < gamePlayService.getLevelDto().getRows(); i++) {
             for (int j = 0; j < gamePlayService.getLevelDto().getCols(); j++) {
                 if ("0".equals(gamePlayService.getLevelDto().getMap()[i][j])) {
-                    gamePlayService.getLevelDto().getBricks()[i][j] = imageService.createImage("bricks", j * 100, i * 100);
+                    gamePlayService.getLevelDto().getBricks()[i][j] = imageService.createImage(gamePlayService.getLevelDto().getAssetsLocation()+"/bricks", j * 100, i * 100);
                     panel.add(gamePlayService.getLevelDto().getBricks()[i][j]);
                 }
             }

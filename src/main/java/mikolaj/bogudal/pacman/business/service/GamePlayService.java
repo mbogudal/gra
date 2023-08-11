@@ -1,17 +1,24 @@
 package mikolaj.bogudal.pacman.business.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import mikolaj.bogudal.pacman.business.dto.LevelDto;
+import mikolaj.bogudal.pacman.business.dto.LevelJsonDto;
 import mikolaj.bogudal.pacman.business.dto.PlayerDto;
 import mikolaj.bogudal.pacman.business.listener.PlayerListener;
+import mikolaj.bogudal.pacman.util.JsonUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +40,9 @@ public class GamePlayService {
     private final PlayerDto playerDto;
     private final ImageService imageService;
     private final SystemService systemService;
+    private List<LevelJsonDto> levelJsonDtos;
 
+    @SneakyThrows
     public GamePlayService(ImageService imageService, SystemService systemService) {
         this.imageService = imageService;
         this.systemService = systemService;
@@ -41,22 +50,31 @@ public class GamePlayService {
         windowPoint = new Point();
         var rows = 5;
         var cols = 5;
+
+        levelJsonDtos = JsonUtil.deserialize(
+                Files.readString(
+                        Paths.get(ResourceUtils.getFile("classpath:levels.json").toURI())
+                ),
+                new TypeReference<List<LevelJsonDto>>(){}
+        );
+
         levelDto = LevelDto
                 .builder()
                 .cols(cols)
                 .rows(rows)
                 .map(new String[rows][cols])
                 .images(new HashMap<>())
-                .endScreen(imageService.createImage("endScreen", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
+                .endScreen(imageService.createImage(levelJsonDtos.get(0).getAssetsLocation()+"endScreen", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
                 .bricks(new JLabel[rows][cols])
-                .background(imageService.createImage("background", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
+                .background(imageService.createImage(levelJsonDtos.get(0).getAssetsLocation()+"background", 0, 0, systemService.getScreenW(), systemService.getScreenH()))
+                .assetsLocation(levelJsonDtos.get(0).getAssetsLocation())
                 .build();
 
         var playerPoint = new Point();
         playerDto = PlayerDto
                 .builder()
                 .playerListener(new PlayerListener(playerPoint, levelDto.getMap()))
-                .player(imageService.createImage("player", 0, 0))
+                .player(imageService.createImage(levelJsonDtos.get(0).getAssetsLocation()+"player", 0, 0))
                 .playerPoint(playerPoint)
                 .build();
     }

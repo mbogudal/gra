@@ -16,4 +16,5 @@ public class LevelDto {
     JLabel endScreen;
     JLabel[][] bricks;
     JLabel background;
+    String assetsLocation;
 }
