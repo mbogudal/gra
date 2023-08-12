@@ -23,7 +23,7 @@ public class DisplayService {
         this.gamePlayService = gamePlayService;
         this.systemService = systemService;
         this.imageService = imageService;
-        this.frame = new JFrame("OneCaucas");
+        this.frame = new JFrame("Parnavaz-legend about his dream");
         panel = createJPanel();
     }
 
