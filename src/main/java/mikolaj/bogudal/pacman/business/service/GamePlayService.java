@@ -98,7 +98,7 @@ public class GamePlayService {
         log.info("game started");
         var rows = 5;
         var cols = 5;
-        selected = levelJsonDtosCopy.get(new Random().nextInt(levelJsonDtos.size()));
+        selected = levelJsonDtosCopy.get(new Random().nextInt(levelJsonDtosCopy.size()));
 
         levelDto = LevelDto
                 .builder()
