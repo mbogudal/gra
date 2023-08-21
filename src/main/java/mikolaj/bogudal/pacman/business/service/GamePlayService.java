@@ -43,9 +43,11 @@ public class GamePlayService {
     private final ImageService imageService;
     private final SystemService systemService;
     private List<LevelJsonDto> levelJsonDtos;
+    private List<LevelJsonDto> levelJsonDtosCopy;
     private final JFrame frame;
 
     private JPanel panel;
+    private LevelJsonDto selected;
 
     @SneakyThrows
     public GamePlayService(ImageService imageService, SystemService systemService) {
@@ -59,6 +61,8 @@ public class GamePlayService {
                 new TypeReference<List<LevelJsonDto>>() {
                 }
         );
+
+        levelJsonDtosCopy = new ArrayList<>(levelJsonDtos);
 
         JFrame frame = null;
 
@@ -84,16 +88,17 @@ public class GamePlayService {
         reloadDisplay();
         for (int i = 0; i < levelDto.getRows(); i++) {
             for (int j = 0; j < levelDto.getCols(); j++) {
-                levelDto.getBricks()[i][j]=null;
+                levelDto.getBricks()[i][j] = null;
             }
         }
+        levelJsonDtosCopy = new ArrayList<>(levelJsonDtos);
     }
 
-    void initLevel(){
+    void initLevel() {
         log.info("game started");
         var rows = 5;
         var cols = 5;
-        LevelJsonDto selected = levelJsonDtos.get(new Random().nextInt(levelJsonDtos.size()));
+        selected = levelJsonDtosCopy.get(new Random().nextInt(levelJsonDtos.size()));
 
         levelDto = LevelDto
                 .builder()
@@ -148,7 +153,7 @@ public class GamePlayService {
         if (bricks.isEmpty()) {
             onGameOver();
         }
-        if(playerDto.getPlayerListener().isClickSpace()){
+        if (playerDto.getPlayerListener().isClickSpace()) {
             onNewGame();
             playerDto.getPlayerListener().setClickSpace(false);
         }
@@ -181,9 +186,13 @@ public class GamePlayService {
     void onGameOver() {
         levelDto.getEndScreen().setVisible(true);
         playerDto.getPlayerListener().setGameOver(true);
+        levelJsonDtosCopy.remove(selected);
+        if (levelJsonDtosCopy.isEmpty()) {
+            levelJsonDtosCopy = new ArrayList<>(levelJsonDtos);
+        }
     }
 
-    void onNewGame(){
+    void onNewGame() {
         levelDto.getEndScreen().setVisible(false);
         initLevel();
         initMap();
@@ -221,7 +230,7 @@ public class GamePlayService {
 
     void reloadDisplay() {
         if (frame != null) {
-            if(panel != null)
+            if (panel != null)
                 frame.remove(panel);
             frame.addKeyListener(playerDto.getPlayerListener());
         }
