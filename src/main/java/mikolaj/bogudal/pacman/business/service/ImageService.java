@@ -1,6 +1,7 @@
 package mikolaj.bogudal.pacman.business.service;
 
 import lombok.extern.java.Log;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -34,7 +35,7 @@ public class ImageService {
             } else {
                 image = new ImageIcon(
                         ImageIO.read(
-                                        ResourceUtils.getFile("classpath:assets/" + name + ".png"))
+                                new ClassPathResource("assets/" + name + ".png").getInputStream())
                                 .getScaledInstance(w, h, Image.SCALE_SMOOTH)
                 );
                 images.put(name, image);

@@ -23,24 +23,33 @@ public class DisplayService {
         this.gamePlayService = gamePlayService;
         this.systemService = systemService;
         this.imageService = imageService;
-        this.frame = new JFrame("Parnavaz-legend about his dream");
+        JFrame frame = null;
+
+        try {
+            frame = new JFrame("Parnavaz-legend about his dream");
+        } catch (HeadlessException e) {
+
+        }
+        this.frame = frame;
         panel = createJPanel();
     }
 
     @PostConstruct
     void init() {
-        this.frame.setLayout(null);
-        this.frame.setVisible(true);
-        frame.addKeyListener(gamePlayService.getPlayerDto().getPlayerListener());
-        frame.setFocusable(true);
-        frame.setSize(systemService.getScreenW(), systemService.getScreenH());
+        if (frame != null) {
+            this.frame.setLayout(null);
+            this.frame.setVisible(true);
+            frame.addKeyListener(gamePlayService.getPlayerDto().getPlayerListener());
+            frame.setFocusable(true);
+            frame.setSize(systemService.getScreenW(), systemService.getScreenH());
+        }
         panel.add(gamePlayService.getLevelDto().getEndScreen());
         gamePlayService.getLevelDto().getEndScreen().setVisible(false);
         panel.add(gamePlayService.getPlayerDto().getPlayer());
         for (int i = 0; i < gamePlayService.getLevelDto().getRows(); i++) {
             for (int j = 0; j < gamePlayService.getLevelDto().getCols(); j++) {
                 if ("0".equals(gamePlayService.getLevelDto().getMap()[i][j])) {
-                    gamePlayService.getLevelDto().getBricks()[i][j] = imageService.createImage(gamePlayService.getLevelDto().getAssetsLocation()+"/bricks", j * 100, i * 100);
+                    gamePlayService.getLevelDto().getBricks()[i][j] = imageService.createImage(gamePlayService.getLevelDto().getAssetsLocation() + "/bricks", j * 100, i * 100);
                     panel.add(gamePlayService.getLevelDto().getBricks()[i][j]);
                 }
             }
@@ -48,10 +57,12 @@ public class DisplayService {
         panel.add(gamePlayService.getLevelDto().getBackground());
         panel.repaint();
         panel.revalidate();
-        frame.add(panel);
-        frame.repaint();
-        frame.revalidate();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        if (frame != null) {
+            frame.add(panel);
+            frame.repaint();
+            frame.revalidate();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
 
     }
 
@@ -63,9 +74,6 @@ public class DisplayService {
         out.setBackground(new Color(0, 0, 0));
         return out;
     }
-
-
-
 
 
 }

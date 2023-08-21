@@ -10,6 +10,8 @@ import mikolaj.bogudal.pacman.business.dto.LevelJsonDto;
 import mikolaj.bogudal.pacman.business.dto.PlayerDto;
 import mikolaj.bogudal.pacman.business.listener.PlayerListener;
 import mikolaj.bogudal.pacman.util.JsonUtil;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.util.ResourceUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -54,9 +57,7 @@ public class GamePlayService {
         iLevel = 0;
 
         levelJsonDtos = JsonUtil.deserialize(
-                Files.readString(
-                        Paths.get(ResourceUtils.getFile("classpath:levels.json").toURI())
-                ),
+                IOUtils.toString(new ClassPathResource("levels.json").getInputStream()),
                 new TypeReference<List<LevelJsonDto>>() {
                 }
         );
