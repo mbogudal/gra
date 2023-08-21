@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-@Async
 @Log
 @Service
 public class GamePlayService {
@@ -38,12 +37,15 @@ public class GamePlayService {
     private JLabel brick;
     private final Point windowPoint;
     @Getter
-    private final LevelDto levelDto;
+    private LevelDto levelDto;
     @Getter
-    private final PlayerDto playerDto;
+    private PlayerDto playerDto;
     private final ImageService imageService;
     private final SystemService systemService;
     private List<LevelJsonDto> levelJsonDtos;
+    private final JFrame frame;
+
+    private JPanel panel;
 
     @SneakyThrows
     public GamePlayService(ImageService imageService, SystemService systemService) {
@@ -51,8 +53,6 @@ public class GamePlayService {
         this.systemService = systemService;
         this.bricks = new ArrayList<>();
         windowPoint = new Point();
-        var rows = 5;
-        var cols = 5;
 
         levelJsonDtos = JsonUtil.deserialize(
                 IOUtils.toString(new ClassPathResource("levels.json").getInputStream()),
@@ -60,6 +60,26 @@ public class GamePlayService {
                 }
         );
 
+        JFrame frame = null;
+
+        try {
+            frame = new JFrame("Parnavaz-legend about his dream");
+        } catch (HeadlessException e) {
+
+        }
+        this.frame = frame;
+    }
+
+    @PostConstruct
+    void init() {
+        initGame();
+        playerDto.getPlayerListener().setGameOver(true);
+    }
+
+    void initGame(){
+        log.info("game started");
+        var rows = 5;
+        var cols = 5;
         LevelJsonDto selected = levelJsonDtos.get(new Random().nextInt(levelJsonDtos.size()));
 
         levelDto = LevelDto
@@ -81,15 +101,11 @@ public class GamePlayService {
                 .player(imageService.createImage(selected.getAssetsLocation() + "/player", 0, 0))
                 .playerPoint(playerPoint)
                 .build();
-    }
-
-    @PostConstruct
-    void init() {
-        log.info("game started");
         initMap();
     }
 
 
+    @Async
     @Scheduled(fixedRate = 16)
     void perFrame() {
         movePlayer();
@@ -149,7 +165,9 @@ public class GamePlayService {
     void onGameOver() {
         levelDto.getEndScreen().setVisible(true);
         playerDto.getPlayerListener().setGameOver(true);
-        while (playerDto.getPlayerListener().isGameOver()) ;
+        initGame();
+        while (playerDto.getPlayerListener().isGameOver()){};
+        reloadDisplay();
     }
 
     void onHideBricks() {
@@ -170,6 +188,47 @@ public class GamePlayService {
                 levelDto.getMap()[i][j] = "0";
             }
         }
+    }
+
+    private JPanel createJPanel() {
+        var out = new JPanel();
+        out.setLayout(null);
+        out.setVisible(true);
+        out.setBounds(0, 0, systemService.getScreenW(), systemService.getScreenH());
+        out.setBackground(new Color(0, 0, 0));
+        return out;
+    }
+
+    void reloadDisplay() {
+        panel = createJPanel();
+        if (frame != null) {
+            this.frame.setLayout(null);
+            this.frame.setVisible(true);
+            frame.addKeyListener(playerDto.getPlayerListener());
+            frame.setFocusable(true);
+            frame.setSize(systemService.getScreenW(), systemService.getScreenH());
+        }
+        panel.add(levelDto.getEndScreen());
+        levelDto.getEndScreen().setVisible(false);
+        panel.add(playerDto.getPlayer());
+        for (int i = 0; i < levelDto.getRows(); i++) {
+            for (int j = 0; j < levelDto.getCols(); j++) {
+                if ("0".equals(levelDto.getMap()[i][j])) {
+                    levelDto.getBricks()[i][j] = imageService.createImage(levelDto.getAssetsLocation() + "/bricks", j * 100, i * 100);
+                    panel.add(levelDto.getBricks()[i][j]);
+                }
+            }
+        }
+        panel.add(levelDto.getBackground());
+        panel.repaint();
+        panel.revalidate();
+        if (frame != null) {
+            frame.add(panel);
+            frame.repaint();
+            frame.revalidate();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
+
     }
 
 }
