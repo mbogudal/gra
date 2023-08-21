@@ -68,6 +68,13 @@ public class GamePlayService {
 
         }
         this.frame = frame;
+
+        if (frame != null) {
+            this.frame.setLayout(null);
+            this.frame.setVisible(true);
+            frame.setFocusable(true);
+            frame.setSize(systemService.getScreenW(), systemService.getScreenH());
+        }
     }
 
     @PostConstruct
@@ -200,14 +207,12 @@ public class GamePlayService {
     }
 
     void reloadDisplay() {
-        panel = createJPanel();
         if (frame != null) {
-            this.frame.setLayout(null);
-            this.frame.setVisible(true);
+            if(panel != null)
+                frame.remove(panel);
             frame.addKeyListener(playerDto.getPlayerListener());
-            frame.setFocusable(true);
-            frame.setSize(systemService.getScreenW(), systemService.getScreenH());
         }
+        panel = createJPanel();
         panel.add(levelDto.getEndScreen());
         levelDto.getEndScreen().setVisible(false);
         panel.add(playerDto.getPlayer());
