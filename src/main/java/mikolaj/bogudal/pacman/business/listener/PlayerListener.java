@@ -17,6 +17,9 @@ public class PlayerListener extends KeyAdapter {
     @Getter
     @Setter
     private boolean gameOver;
+    @Getter
+    @Setter
+    private boolean clickSpace;
 
 
     public PlayerListener(Point point, String[][] map) {
@@ -53,7 +56,10 @@ public class PlayerListener extends KeyAdapter {
                 }
                 break;
             case KeyEvent.VK_SPACE:
+                if(!gameOver)
+                    break;
                 gameOver=false;
+                clickSpace=true;
                 break;
         }
     }

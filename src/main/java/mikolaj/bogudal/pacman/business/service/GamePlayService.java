@@ -79,11 +79,17 @@ public class GamePlayService {
 
     @PostConstruct
     void init() {
-        initGame();
-        playerDto.getPlayerListener().setGameOver(true);
+        initLevel();
+        initMap();
+        reloadDisplay();
+        for (int i = 0; i < levelDto.getRows(); i++) {
+            for (int j = 0; j < levelDto.getCols(); j++) {
+                levelDto.getBricks()[i][j]=null;
+            }
+        }
     }
 
-    void initGame(){
+    void initLevel(){
         log.info("game started");
         var rows = 5;
         var cols = 5;
@@ -108,7 +114,6 @@ public class GamePlayService {
                 .player(imageService.createImage(selected.getAssetsLocation() + "/player", 0, 0))
                 .playerPoint(playerPoint)
                 .build();
-        initMap();
     }
 
 
@@ -140,8 +145,12 @@ public class GamePlayService {
     }
 
     void validateRules() {
-        if (bricks.isEmpty() || counterEndGame % (60 * 60 * 3) == 0) {
+        if (bricks.isEmpty()) {
             onGameOver();
+        }
+        if(playerDto.getPlayerListener().isClickSpace()){
+            onNewGame();
+            playerDto.getPlayerListener().setClickSpace(false);
         }
     }
 
@@ -172,8 +181,12 @@ public class GamePlayService {
     void onGameOver() {
         levelDto.getEndScreen().setVisible(true);
         playerDto.getPlayerListener().setGameOver(true);
-        initGame();
-        while (playerDto.getPlayerListener().isGameOver()){};
+    }
+
+    void onNewGame(){
+        levelDto.getEndScreen().setVisible(false);
+        initLevel();
+        initMap();
         reloadDisplay();
     }
 
