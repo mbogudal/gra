@@ -1,12 +1,27 @@
 [
   {
-    "id": 0,
-    "name": "test",
+    "id": 1,
+    "name": "test1",
     "assetsLocation": "test-no-1"
   },
   {
-    "id": 1,
-    "name": "test",
+    "id": 2,
+    "name": "test2",
     "assetsLocation": "test-no-2"
+  },
+  {
+    "id": 3,
+    "name": "test3",
+    "assetsLocation": "test-no-3"
+  },
+  {
+    "id": 4,
+    "name": "test4",
+    "assetsLocation": "test-no-4"
+  },
+  {
+    "id": 5,
+    "name": "test5",
+    "assetsLocation": "test-no-5"
   }
 ]
