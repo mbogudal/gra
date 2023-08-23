@@ -68,17 +68,14 @@ public class GamePlayService {
 
         try {
             frame = new JFrame("Parnavaz-legend about his dream");
+            frame.setLayout(null);
+            frame.setVisible(true);
+            frame.setFocusable(true);
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         } catch (HeadlessException e) {
 
         }
         this.frame = frame;
-
-        if (frame != null) {
-            this.frame.setLayout(null);
-            this.frame.setVisible(true);
-            frame.setFocusable(true);
-            frame.setSize(systemService.getScreenW(), systemService.getScreenH());
-        }
     }
 
     @PostConstruct
@@ -219,11 +216,11 @@ public class GamePlayService {
         }
     }
 
-    private JPanel createJPanel() {
+    private JPanel createJPanel(JFrame frame) {
         var out = new JPanel();
         out.setLayout(null);
         out.setVisible(true);
-        out.setBounds(0, 0, systemService.getScreenW(), systemService.getScreenH());
+        out.setBounds(frame.getWidth()/2-systemService.getScreenW()/2, frame.getHeight()/2-systemService.getScreenH()/2, systemService.getScreenW(), systemService.getScreenH());
         out.setBackground(new Color(0, 0, 0));
         return out;
     }
@@ -234,7 +231,7 @@ public class GamePlayService {
                 frame.remove(panel);
             frame.addKeyListener(playerDto.getPlayerListener());
         }
-        panel = createJPanel();
+        panel = createJPanel(frame);
         panel.add(levelDto.getEndScreen());
         levelDto.getEndScreen().setVisible(false);
         panel.add(playerDto.getPlayer());
